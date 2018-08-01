@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSON to CSV</title>
+  <link rel="stylesheet" href="lib/handsontable/handsontable.full.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="row">
+    <div class="column content">
+      <textarea id="json-field" style="margin-bottom:100px;">
+[
+  {
+    "key": "value-0",
+    "obj": {
+      "key": "value-1"
+    }
+  },
+  {
+    "key": "value-2",
+    "obj": {
+      "key": "value-3"
+    }
+  }
+]
+      </textarea>
+    </div>
+    <div class="column content">
+      <div id="table"></div>
+    </div>
+  </div>
+
+  <div id="footer">
+    <input type="text" id="filename-select" value="json-to-csv.csv"/>
+    <a id="download-as-csv" download="json-to-csv.csv" class="button">Download</a>
+  </div>
+
+  <script src="lib/core-js/core.min.js"></script>
+  <script src="lib/handsontable/handsontable.full.min.js"></script>
+  <script src="scripts.js"></script>
+
+  <script>
+    (function() {
+
+      // your page initialization code here
+      // the DOM will be available here
+
+      var handsontable;
+
+      var jsonField = $$('json-field');
+      var tableContainer = $$('table');
+      var downloadDataLink = $$('download-as-csv');
+      var filenameSelect = $$('filename-select');
+
+      jsonField.style.width = (window.innerWidth / 2) + 'px';
+      jsonField.style.height = (window.innerHeight - 100) + 'px';
+
+      function parse() {
+        var json = jsonField.value;
+        var data = parseJSON(json);
+        if (!Array.isArray(data)) {
+          return alert('Invalid JSON: must be array!');
+        }
+        var flat = flattenObjectsInArray(data);
+        var keys = discoverKeys(flat);
+
+        tableContainer.innerHTML = '';
+        handsontable = new Handsontable(tableContainer, {
+          data: data,
+          rowHeaders: true,
+          colHeaders: keys,
+        });
+      }
+
+      function exportAsCsv() {
+        var tableData =
+          [handsontable.getColHeader()]
+          .concat(handsontable.getData());
+        var csvData = tableToCSV(tableData);
+        var dataURL = generateDataURL(csvData);
+        downloadDataLink.href = dataURL;
+      }
+
+      function setFilename() {
+        downloadDataLink.download = filenameSelect.value;
+      }
+
+      jsonField.addEventListener("change", parse);
+      downloadDataLink.addEventListener("click", exportAsCsv);
+      filenameSelect.addEventListener("change", setFilename);
+
+      parse();
+
+    })();
+  </script>
+
+</body>
+</html>
