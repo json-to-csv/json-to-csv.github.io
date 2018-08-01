@@ -9,7 +9,7 @@
 
   <div class="row">
     <div class="column content">
-      <textarea id="json-field" style="margin-bottom:100px;">
+<textarea id="json-field" class="shadow shadow-focus" style="border: 1px solid lightgrey; outline: none;">
 [
   {
     "key": "value-0",
@@ -24,15 +24,23 @@
     }
   }
 ]
-      </textarea>
+</textarea>
     </div>
     <div class="column content">
-      <div id="table"></div>
+      <div id="table" class="shadow"></div>
     </div>
   </div>
 
   <div id="footer">
-    <input type="text" id="filename-select" value="json-to-csv.csv"/>
+      <a
+        href="https://github.com/json-to-csv"
+        target="_blank"
+        style="float: left; margin:15px; font-family:Helvetica; font-weight:300;"
+      >
+        github.com/json-to-csv
+      </a>
+    </span>
+    <input type="text" id="filename-select" value="json-to-csv.csv" class="input shadow shadow-focus" style="width:200px;"/>
     <a id="download-as-csv" download="json-to-csv.csv" class="button">Download</a>
   </div>
 
@@ -55,6 +63,7 @@
 
       jsonField.style.width = (window.innerWidth / 2) + 'px';
       jsonField.style.height = (window.innerHeight - 100) + 'px';
+      jsonField.style['margin-bottom'] = '50px';
 
       function parse() {
         var json = jsonField.value;
